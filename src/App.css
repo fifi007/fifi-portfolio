@@ -1,0 +1,33 @@
+.page--gallery {
+  min-height: 100vh;
+}
+
+.page--gallery .page__main {
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+.work {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding-top: 8px;
+}
+
+.work__stage {
+  position: relative;
+  flex: 1;
+  width: 100%;
+}
+
+.work__panel {
+  width: 100%;
+}
+
+.page--list .work {
+  padding-bottom: 8px;
+}
+
+.page--list .work__stage {
+  flex: 0 1 auto;
+}

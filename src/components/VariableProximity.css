@@ -1,0 +1,22 @@
+.variable-proximity {
+  font-family: inherit;
+}
+
+.variable-proximity__line {
+  display: block;
+}
+
+.variable-proximity__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.variable-proximity__letter {
+  display: inline-block;
+  will-change: transform, font-weight, font-variation-settings;
+  transform-origin: center bottom;
+}
+
+.variable-proximity__space {
+  display: inline-block;
+}
