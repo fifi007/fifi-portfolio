@@ -1,80 +1,55 @@
-import { useCallback, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Header } from './components/Header'
-import { Hero } from './components/Hero'
-import { ViewToggle } from './components/ViewToggle'
-import { ProjectGallery } from './components/ProjectGallery'
-import { ProjectList } from './components/ProjectList'
-import { Footer } from './components/Footer'
-import { Loading } from './components/Loading'
-import { listProjects, projects } from './data/projects'
-import type { ViewMode } from './data/types'
-import './App.css'
+import { useCallback, useState, type ReactElement } from 'react'
+import {
+  PAYMENT_CLOUD_PATH,
+  PaymentCloudPage,
+} from '../payment cloud'
+import { HONGMIAN_PATH, HongmianPage } from '../hongmian'
+import { FAB_PATH, FabPage } from '../fab'
+import { FAGILI_PATH, FagiliPage } from '../fagili'
+import { OVF_PATH, OvfPage } from '../ovf'
+import { PROJECT_123_PATH, Project123Page } from '../123'
+import { FAIRY_DEVIL_PATH, FairyAndDevilPage } from '../fairy-and-devil'
+import { CRADLE_BABY_PATH, CradleBabyPage } from '../cradle-baby'
+import { LONGSHENMI_PATH, LongshenmiPage } from '../longshenmi'
+import { WATERCOLOR_PATH, WatercolorPage } from '../watercolor'
+import {
+  BLUE_SKY_BUBBLE_PATH,
+  BlueSkyBubblePage,
+} from '../blue-sky-bubble-demo'
+import { HomePage } from './HomePage'
+
+const projectRoutes: Record<string, () => ReactElement> = {
+  [PAYMENT_CLOUD_PATH]: () => <PaymentCloudPage />,
+  [HONGMIAN_PATH]: () => <HongmianPage />,
+  [FAB_PATH]: () => <FabPage />,
+  [FAGILI_PATH]: () => <FagiliPage />,
+  [OVF_PATH]: () => <OvfPage />,
+  [PROJECT_123_PATH]: () => <Project123Page />,
+  [FAIRY_DEVIL_PATH]: () => <FairyAndDevilPage />,
+  [CRADLE_BABY_PATH]: () => <CradleBabyPage />,
+  [LONGSHENMI_PATH]: () => <LongshenmiPage />,
+  [WATERCOLOR_PATH]: () => <WatercolorPage />,
+  [BLUE_SKY_BUBBLE_PATH]: () => <BlueSkyBubblePage />,
+}
 
 function App() {
-  const [viewMode, setViewMode] = useState<ViewMode>('gallery')
   const [isLoading, setIsLoading] = useState(true)
+  const pathname = window.location.pathname.replace(/\/+$/, '') || '/'
+  const ProjectPage = projectRoutes[pathname]
 
   const handleLoadingComplete = useCallback(() => {
     setIsLoading(false)
   }, [])
 
+  if (ProjectPage) {
+    return <ProjectPage />
+  }
+
   return (
-    <>
-      {isLoading && <Loading onComplete={handleLoadingComplete} />}
-
-      <div
-        className={`page page--${viewMode}`}
-        style={{
-          opacity: isLoading ? 0 : 1,
-          transition: 'opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      >
-        <Header />
-
-        <main className="page__main">
-          <Hero />
-
-          <section className="work" id="work">
-            <ViewToggle
-              viewMode={viewMode}
-              onViewChange={setViewMode}
-              showLabel={viewMode === 'list'}
-            />
-
-            <div className="work__stage">
-              <AnimatePresence mode="wait">
-                {viewMode === 'gallery' ? (
-                  <motion.div
-                    key="gallery"
-                    className="work__panel"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <ProjectGallery projects={projects} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="list"
-                    className="work__panel"
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <ProjectList projects={listProjects} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </section>
-        </main>
-
-        <Footer />
-      </div>
-    </>
+    <HomePage
+      isLoading={isLoading}
+      onLoadingComplete={handleLoadingComplete}
+    />
   )
 }
 

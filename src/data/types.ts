@@ -18,4 +18,6 @@ export interface Project {
   rotation: number
   /** List view order matching Figma dashboard-2 */
   listOrder: number
+  /** Optional dedicated project page path */
+  href?: string
 }

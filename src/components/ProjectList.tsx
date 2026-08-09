@@ -12,7 +12,7 @@ export function ProjectList({ projects }: ProjectListProps) {
       {projects.map((project, index) => (
         <motion.a
           key={project.id}
-          href={`#${project.id}`}
+          href={project.href ?? `#${project.id}`}
           className="list-card"
           layout
           initial={{ opacity: 0, y: 16 }}
