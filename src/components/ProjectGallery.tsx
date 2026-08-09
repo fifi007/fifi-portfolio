@@ -71,7 +71,7 @@ function GalleryBoard({
         return (
           <motion.a
             key={key}
-            href={`#${project.id}`}
+            href={project.href ?? `#${project.id}`}
             className={`slider-card slider-card--${project.size}`}
             style={{
               left: project.x,

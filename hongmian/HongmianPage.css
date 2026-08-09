@@ -1,0 +1,138 @@
+.hm-page {
+  --hm-content-max: 1200px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+}
+
+.hm-page__main {
+  flex: 1;
+  width: 100%;
+  /* Shared content column: hero text + showcase images share one left edge */
+  padding: 40px max(var(--page-padding), calc((100% - var(--hm-content-max)) / 2)) 0;
+}
+
+.hm-hero {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+  width: 100%;
+  max-width: var(--hm-content-max);
+  margin: 0 auto 56px;
+}
+
+.hm-hero__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.hm-hero__title {
+  margin: 0 0 22px;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Gotham', sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.hm-hero__label {
+  margin: 0 0 6px;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.hm-hero__value {
+  margin: 0 0 20px;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.hm-hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 4px;
+}
+
+.hm-hero__text {
+  margin: 0;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-primary);
+}
+
+.hm-hero__text p {
+  margin: 0;
+}
+
+.hm-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: var(--hm-content-max);
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+.hm-showcase__item {
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.hm-showcase__item figcaption {
+  display: none;
+}
+
+.hm-showcase__item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .hm-page__main {
+    padding-top: 28px;
+  }
+
+  .hm-hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-bottom: 36px;
+  }
+
+  .hm-hero__title {
+    margin-bottom: 16px;
+  }
+
+  .hm-hero__copy {
+    gap: 16px;
+  }
+
+  .hm-showcase {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hm-page__main {
+    padding-top: 20px;
+  }
+
+  .hm-hero__title {
+    font-size: 18px;
+  }
+}

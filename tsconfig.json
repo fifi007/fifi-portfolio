@@ -18,5 +18,18 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "payment cloud",
+    "hongmian",
+    "fab",
+    "fagili",
+    "ovf",
+    "123",
+    "fairy-and-devil",
+    "cradle-baby",
+    "longshenmi",
+    "watercolor",
+    "blue-sky-bubble-demo"
+  ]
 }

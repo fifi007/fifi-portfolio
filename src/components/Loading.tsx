@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { criticalImages } from '../data/projects'
+import { criticalImages as homeCriticalImages } from '../data/projects'
 import './Loading.css'
 
 interface LoadingProps {
   onComplete: () => void
+  /** Override images to preload (defaults to homepage gallery/list assets) */
+  images?: string[]
 }
 
 function preloadImage(src: string) {
@@ -16,7 +18,7 @@ function preloadImage(src: string) {
   })
 }
 
-export function Loading({ onComplete }: LoadingProps) {
+export function Loading({ onComplete, images = homeCriticalImages }: LoadingProps) {
   const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
@@ -36,12 +38,12 @@ export function Loading({ onComplete }: LoadingProps) {
       }, remaining)
     }
 
-    Promise.all(criticalImages.map(preloadImage)).then(finish)
+    Promise.all(images.map(preloadImage)).then(finish)
 
     return () => {
       cancelled = true
     }
-  }, [onComplete])
+  }, [onComplete, images])
 
   return (
     <AnimatePresence>
