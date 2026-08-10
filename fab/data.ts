@@ -7,7 +7,7 @@ export const projectMeta: ProjectCaseMeta = {
   roleLabel: '职责',
   roles: ['用户界面设计', '动效设计', 'banner设计', '体验验收'],
   descriptionZh: [
-    '2026年，华为上线”金融智能体加速器FAB（FinAgent Booster）”，该平台聚焦手机银行、风控信贷等核心场景，通过预置50+场景工作流与150+金融MCP工具，让智能体应用开发从数月缩短至数周，加速AI在金融行业的商业落地。作为UX设计师，我独立为30+核心场景设计了首页banner，并且定义了交互动效设计，获得客户的一致好评。',
+    '2026年，华为上线”金融智能体加速器FAB（FinAgent Booster）”，该平台聚焦手机银行、风控信贷等核心场景，通过预置50+场景工作流与150+金融MCP工具，让智能体应用开发从数月缩短至数周，加速AI在金融行业的商业落地。作为UX设计师，我独立为30+核心场景设计了首页banner，并且定义了交互动效设计，获得客户的一致好评',
   ],
   descriptionEn: [
     'In 2026, Huawei launched the FinAgent Booster (FAB), a financial agent accelerator. Centered on core scenarios including mobile banking, risk control and credit services, the platform comes with over 50 pre-built scenario workflows and more than 150 financial MCP tools. It cuts the development cycle of agent-based applications from months to weeks, accelerating the commercial rollout of AI across the financial industry. As a UX Designer, I independently designed homepage banners for over 30 core scenarios and standardized interactive motion design, which earned unanimous positive feedback from clients',

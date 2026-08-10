@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import type { Project } from '../data/types'
+import { SmartImage } from './SmartImage'
 import './ProjectList.css'
 
 interface ProjectListProps {
@@ -24,7 +25,7 @@ export function ProjectList({ projects }: ProjectListProps) {
           }}
           whileHover={{ y: -4 }}
         >
-          <img
+          <SmartImage
             src={project.listImage}
             alt={project.title}
             className="list-card__image"

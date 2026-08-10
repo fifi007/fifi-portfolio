@@ -45,6 +45,6 @@ export const projectMeta = {
   ],
 }
 
-export const criticalImages = showcaseImages.map((image) => image.src)
+export const criticalImages = showcaseImages.slice(0, 1).map((image) => image.src)
 
 export const ROUTE_PATH = '/projects/payment-cloud'

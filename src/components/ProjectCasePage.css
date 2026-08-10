@@ -93,6 +93,10 @@
   margin: 0;
 }
 
+.case-hero__text p + p {
+  margin-top: 12px;
+}
+
 .case-showcase {
   display: flex;
   flex-direction: column;
@@ -111,16 +115,21 @@
 }
 
 .case-showcase__item img,
-.case-showcase__item video {
+.case-showcase__item .smart-image,
+.case-showcase__item .smart-image__img,
+.case-showcase__item video,
+.case-showcase__video {
   width: 100%;
   height: auto;
   display: block;
   vertical-align: top;
 }
 
-.case-showcase__item video {
-  object-fit: cover;
+.case-showcase__item video,
+.case-showcase__video {
+  object-fit: contain;
   background: #111;
+  -webkit-touch-callout: default;
 }
 
 .case-showcase__grid-block {

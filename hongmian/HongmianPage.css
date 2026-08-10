@@ -76,6 +76,10 @@
   margin: 0;
 }
 
+.hm-hero__text p + p {
+  margin-top: 12px;
+}
+
 .hm-showcase {
   display: flex;
   flex-direction: column;
@@ -97,7 +101,9 @@
   display: none;
 }
 
-.hm-showcase__item img {
+.hm-showcase__item img,
+.hm-showcase__item .smart-image,
+.hm-showcase__item .smart-image__img {
   width: 100%;
   height: auto;
   display: block;

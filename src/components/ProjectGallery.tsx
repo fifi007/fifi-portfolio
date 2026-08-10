@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import type { Project } from '../data/types'
+import { SmartImage } from './SmartImage'
 import './ProjectGallery.css'
 
 interface ProjectGalleryProps {
@@ -10,8 +11,8 @@ interface ProjectGalleryProps {
 /** Figma Image slider artboard */
 const BOARD_WIDTH = 2600
 const BOARD_HEIGHT = 460
-const BASE_SPEED = 0.35 // px per frame at 60fps ≈ slow crawl
-const MAX_EDGE_SPEED = 4.2
+const BASE_SPEED = 0.52 // px per frame at 60fps — slightly faster crawl
+const MAX_EDGE_SPEED = 4.8
 const EDGE_ZONE = 0.18 // 18% of viewport on each side
 
 function usePrefersReducedMotion() {
@@ -33,18 +34,27 @@ function edgeBoost(clientX: number, viewportWidth: number) {
   const rightBound = viewportWidth * (1 - EDGE_ZONE)
 
   if (clientX < leftBound) {
-    // Left edge: reverse + accelerate
     const t = 1 - clientX / leftBound
     return -(BASE_SPEED + t * t * MAX_EDGE_SPEED)
   }
 
   if (clientX > rightBound) {
-    // Right edge: forward + accelerate
     const t = (clientX - rightBound) / (viewportWidth - rightBound)
     return BASE_SPEED + t * t * MAX_EDGE_SPEED
   }
 
   return BASE_SPEED
+}
+
+function normalizeOffset(offset: number) {
+  let next = offset
+  while (next <= -BOARD_WIDTH) next += BOARD_WIDTH
+  while (next > 0) next -= BOARD_WIDTH
+  return next
+}
+
+function touchMidX(touches: TouchList) {
+  return (touches[0].clientX + touches[1].clientX) / 2
 }
 
 function GalleryBoard({
@@ -92,7 +102,7 @@ function GalleryBoard({
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="slider-card__float">
-              <img
+              <SmartImage
                 src={project.image}
                 alt={clone ? '' : project.title}
                 className="slider-card__image"
@@ -113,12 +123,20 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
   const reducedMotion = usePrefersReducedMotion()
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [scale, setScale] = useState(1)
+  const [isPinchDragging, setIsPinchDragging] = useState(false)
   const trackRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
   const offsetRef = useRef(0)
   const speedRef = useRef(BASE_SPEED)
   const targetSpeedRef = useRef(BASE_SPEED)
   const pausedRef = useRef(false)
   const rafRef = useRef(0)
+  const pinchDraggingRef = useRef(false)
+  const pinchStartXRef = useRef(0)
+  const pinchStartOffsetRef = useRef(0)
+  const scaleRef = useRef(scale)
+  const hoveredIdRef = useRef(hoveredId)
+  const reducedMotionRef = useRef(reducedMotion)
 
   const parallaxX = useMotionValue(0)
   const parallaxY = useMotionValue(0)
@@ -131,6 +149,18 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
   )
 
   useEffect(() => {
+    scaleRef.current = scale
+  }, [scale])
+
+  useEffect(() => {
+    hoveredIdRef.current = hoveredId
+  }, [hoveredId])
+
+  useEffect(() => {
+    reducedMotionRef.current = reducedMotion
+  }, [reducedMotion])
+
+  useEffect(() => {
     const updateScale = () => {
       const available = Math.min(window.innerWidth, 1600)
       setScale(Math.min(1, Math.max(0.42, available / 1440)))
@@ -141,24 +171,27 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
   }, [])
 
   useEffect(() => {
-    pausedRef.current = Boolean(hoveredId) || reducedMotion
+    pausedRef.current =
+      Boolean(hoveredId) || reducedMotion || pinchDraggingRef.current
   }, [hoveredId, reducedMotion])
 
   useEffect(() => {
     if (reducedMotion) return
 
     const handleMove = (event: MouseEvent) => {
+      if (pinchDraggingRef.current) return
+
       const nx = (event.clientX / window.innerWidth - 0.5) * 2
       const ny = (event.clientY / window.innerHeight - 0.5) * 2
       parallaxX.set(nx * 10)
       parallaxY.set(ny * 6)
-
-      // Screen-edge acceleration for browsing
       targetSpeedRef.current = edgeBoost(event.clientX, window.innerWidth)
     }
 
     const handleLeave = () => {
-      targetSpeedRef.current = BASE_SPEED
+      if (!pinchDraggingRef.current) {
+        targetSpeedRef.current = BASE_SPEED
+      }
     }
 
     window.addEventListener('mousemove', handleMove)
@@ -178,18 +211,12 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
       const dt = Math.min(32, now - last) / 16.666
       last = now
 
-      // Smoothly ease toward target edge speed
       speedRef.current += (targetSpeedRef.current - speedRef.current) * 0.08
 
       if (!pausedRef.current && trackRef.current) {
-        offsetRef.current -= speedRef.current * dt
-        // Seamless loop over one board width
-        while (offsetRef.current <= -BOARD_WIDTH) {
-          offsetRef.current += BOARD_WIDTH
-        }
-        while (offsetRef.current > 0) {
-          offsetRef.current -= BOARD_WIDTH
-        }
+        offsetRef.current = normalizeOffset(
+          offsetRef.current - speedRef.current * dt,
+        )
         trackRef.current.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`
       }
 
@@ -200,9 +227,81 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
     return () => cancelAnimationFrame(rafRef.current)
   }, [reducedMotion])
 
+  // Mobile only: two-finger drag. Desktop stays clickable with no drag.
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const applyOffset = (next: number) => {
+      offsetRef.current = normalizeOffset(next)
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`
+      }
+    }
+
+    const beginPinchDrag = (touches: TouchList) => {
+      pinchDraggingRef.current = true
+      pausedRef.current = true
+      setIsPinchDragging(true)
+      pinchStartXRef.current = touchMidX(touches)
+      pinchStartOffsetRef.current = offsetRef.current
+    }
+
+    const endPinchDrag = () => {
+      if (!pinchDraggingRef.current) return
+      pinchDraggingRef.current = false
+      setIsPinchDragging(false)
+      pausedRef.current =
+        Boolean(hoveredIdRef.current) || reducedMotionRef.current
+    }
+
+    const onTouchStart = (event: TouchEvent) => {
+      if (event.touches.length >= 2) {
+        beginPinchDrag(event.touches)
+      }
+    }
+
+    const onTouchMove = (event: TouchEvent) => {
+      if (event.touches.length < 2) {
+        if (pinchDraggingRef.current) endPinchDrag()
+        return
+      }
+
+      if (!pinchDraggingRef.current) {
+        beginPinchDrag(event.touches)
+      }
+
+      event.preventDefault()
+      const midX = touchMidX(event.touches)
+      const dx = midX - pinchStartXRef.current
+      applyOffset(
+        pinchStartOffsetRef.current + dx / Math.max(scaleRef.current, 0.01),
+      )
+    }
+
+    const onTouchEnd = (event: TouchEvent) => {
+      if (event.touches.length < 2) {
+        endPinchDrag()
+      }
+    }
+
+    section.addEventListener('touchstart', onTouchStart, { passive: true })
+    section.addEventListener('touchmove', onTouchMove, { passive: false })
+    section.addEventListener('touchend', onTouchEnd)
+    section.addEventListener('touchcancel', onTouchEnd)
+
+    return () => {
+      section.removeEventListener('touchstart', onTouchStart)
+      section.removeEventListener('touchmove', onTouchMove)
+      section.removeEventListener('touchend', onTouchEnd)
+      section.removeEventListener('touchcancel', onTouchEnd)
+    }
+  }, [])
+
   return (
     <section
-      className="floating-gallery"
+      ref={sectionRef}
+      className={`floating-gallery${isPinchDragging ? ' floating-gallery--pinch-dragging' : ''}`}
       aria-label="Project gallery"
       style={{
         height: BOARD_HEIGHT * scale,

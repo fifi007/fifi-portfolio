@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { Loading } from './Loading'
+import { SmartImage } from './SmartImage'
 import './ProjectCasePage.css'
 
 export interface ShowcaseMedia {
@@ -39,6 +40,97 @@ function isGrid(item: ShowcaseItem): item is ShowcaseGrid {
   return item.type === 'grid'
 }
 
+function CaseVideo({ src, alt }: { src: string; alt: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [showControls, setShowControls] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(pointer: coarse)').matches
+      : false,
+  )
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    video.muted = true
+    video.defaultMuted = true
+    video.playsInline = true
+    video.setAttribute('playsinline', '')
+    video.setAttribute('webkit-playsinline', '')
+    video.setAttribute('x5-playsinline', '')
+    video.setAttribute('x5-video-player-type', 'h5')
+
+    const tryPlay = () => {
+      const playPromise = video.play()
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          setShowControls(true)
+        })
+      }
+    }
+
+    const onLoaded = () => tryPlay()
+    video.addEventListener('loadeddata', onLoaded)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (!entry) return
+        if (entry.isIntersecting) {
+          tryPlay()
+        } else {
+          video.pause()
+        }
+      },
+      { threshold: 0.25 },
+    )
+    observer.observe(video)
+
+    tryPlay()
+
+    return () => {
+      video.removeEventListener('loadeddata', onLoaded)
+      observer.disconnect()
+    }
+  }, [src])
+
+  return (
+    <video
+      ref={videoRef}
+      className="case-showcase__video"
+      src={src}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      controls={showControls}
+      controlsList="nodownload"
+      aria-label={alt}
+    />
+  )
+}
+
+function CaseImage({
+  src,
+  alt,
+  isFirst,
+}: {
+  src: string
+  alt: string
+  isFirst: boolean
+}) {
+  return (
+    <SmartImage
+      src={src}
+      alt={alt}
+      loading={isFirst ? 'eager' : 'lazy'}
+      showPlaceholder={!isFirst}
+      fetchPriority={isFirst ? 'high' : 'auto'}
+    />
+  )
+}
+
 export function ProjectCasePage({
   meta,
   showcase,
@@ -72,10 +164,12 @@ export function ProjectCasePage({
   const hasCopy =
     Boolean(meta.descriptionZh?.length) || Boolean(meta.descriptionEn?.length)
 
+  let imageOrdinal = 0
+
   return (
     <>
       {isLoading && (
-        <Loading images={criticalImages} onComplete={handleLoadingComplete} />
+        <Loading images={criticalImages.slice(0, 1)} onComplete={handleLoadingComplete} />
       )}
 
       <div
@@ -122,15 +216,15 @@ export function ProjectCasePage({
                 <div className="case-hero__copy">
                   {meta.descriptionZh && meta.descriptionZh.length > 0 && (
                     <div className="case-hero__text">
-                      {meta.descriptionZh.map((paragraph) => (
-                        <p key={paragraph}>{paragraph}</p>
+                      {meta.descriptionZh.map((paragraph, index) => (
+                        <p key={`zh-${index}`}>{paragraph}</p>
                       ))}
                     </div>
                   )}
                   {meta.descriptionEn && meta.descriptionEn.length > 0 && (
                     <div className="case-hero__text">
-                      {meta.descriptionEn.map((paragraph) => (
-                        <p key={paragraph}>{paragraph}</p>
+                      {meta.descriptionEn.map((paragraph, index) => (
+                        <p key={`en-${index}`}>{paragraph}</p>
                       ))}
                     </div>
                   )}
@@ -154,41 +248,41 @@ export function ProjectCasePage({
                       <p className="case-showcase__label">{item.label}</p>
                     )}
                     <div className="case-showcase__grid">
-                      {item.items.map((media) => (
-                        <figure key={media.src} className="case-showcase__item">
-                          {media.type === 'video' ? (
-                            <video
-                              src={media.src}
-                              autoPlay
-                              muted
-                              loop
-                              playsInline
-                              aria-label={media.alt}
-                            />
-                          ) : (
-                            <img src={media.src} alt={media.alt} loading="lazy" />
-                          )}
-                        </figure>
-                      ))}
+                      {item.items.map((media) => {
+                        if (media.type === 'video') {
+                          return (
+                            <figure key={media.src} className="case-showcase__item">
+                              <CaseVideo src={media.src} alt={media.alt} />
+                            </figure>
+                          )
+                        }
+
+                        const isFirst = imageOrdinal === 0
+                        imageOrdinal += 1
+                        return (
+                          <figure key={media.src} className="case-showcase__item">
+                            <CaseImage src={media.src} alt={media.alt} isFirst={isFirst} />
+                          </figure>
+                        )
+                      })}
                     </div>
                   </div>
                 )
               }
 
+              if (item.type === 'video') {
+                return (
+                  <figure key={item.src} className="case-showcase__item">
+                    <CaseVideo src={item.src} alt={item.alt} />
+                  </figure>
+                )
+              }
+
+              const isFirst = imageOrdinal === 0
+              imageOrdinal += 1
               return (
                 <figure key={item.src} className="case-showcase__item">
-                  {item.type === 'video' ? (
-                    <video
-                      src={item.src}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      aria-label={item.alt}
-                    />
-                  ) : (
-                    <img src={item.src} alt={item.alt} loading="lazy" />
-                  )}
+                  <CaseImage src={item.src} alt={item.alt} isFirst={isFirst} />
                 </figure>
               )
             })}

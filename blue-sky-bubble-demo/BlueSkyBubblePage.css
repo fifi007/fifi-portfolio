@@ -15,16 +15,24 @@
   box-sizing: border-box;
 }
 
+.bsb-page__bg-picture,
 .bsb-page__bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
   pointer-events: none;
   user-select: none;
+}
+
+.bsb-page__bg-picture .smart-image__picture,
+.bsb-page__bg-picture .smart-image__img,
+.bsb-page__bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .bsb-hero {

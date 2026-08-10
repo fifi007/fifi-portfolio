@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { SmartImage } from '../src/components/SmartImage'
 import { CustomizePanel } from './components/CustomizePanel'
 import { Hero } from './components/Hero'
 import { MetaBallScene } from './components/MetaBallScene'
@@ -35,7 +36,14 @@ export function BlueSkyBubblePage() {
 
   return (
     <main className="bsb-page">
-      <img src={BG} alt="" className="bsb-page__bg" />
+      <SmartImage
+        src={BG}
+        alt=""
+        className="bsb-page__bg"
+        pictureClassName="bsb-page__bg-picture"
+        loading="eager"
+        fetchPriority="high"
+      />
 
       <Hero />
       <NoiseOverlay />

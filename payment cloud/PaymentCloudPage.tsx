@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Header } from '../src/components/Header'
 import { Footer } from '../src/components/Footer'
 import { Loading } from '../src/components/Loading'
+import { SmartImage } from '../src/components/SmartImage'
 import { criticalImages, projectMeta, showcaseImages } from './data'
 import './PaymentCloudPage.css'
 
@@ -67,9 +68,15 @@ export function PaymentCloudPage() {
           </section>
 
           <section className="pc-showcase" aria-label="Project showcase">
-            {showcaseImages.map((image) => (
+            {showcaseImages.map((image, index) => (
               <figure key={image.src} className="pc-showcase__item">
-                <img src={image.src} alt={image.alt} loading="lazy" />
+                <SmartImage
+                  src={image.src}
+                  alt={image.alt}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  showPlaceholder={index > 0}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
+                />
               </figure>
             ))}
           </section>

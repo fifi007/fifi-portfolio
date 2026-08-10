@@ -5,6 +5,13 @@
   flex: 1;
   display: flex;
   align-items: center;
+  /* Keep single-finger taps/clicks; two-finger drag is handled in JS. */
+  touch-action: manipulation;
+}
+
+.floating-gallery--pinch-dragging {
+  touch-action: none;
+  user-select: none;
 }
 
 .floating-gallery__parallax {
@@ -66,6 +73,13 @@
 .slider-card:hover .slider-card__float,
 .slider-card:focus-visible .slider-card__float {
   filter: drop-shadow(0 14px 32px rgba(25, 25, 25, 0.18));
+}
+
+.slider-card .smart-image,
+.slider-card .smart-image__picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .slider-card__image {

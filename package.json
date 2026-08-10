@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "convert:images": "node scripts/convert-jpg-to-modern.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.18.2",

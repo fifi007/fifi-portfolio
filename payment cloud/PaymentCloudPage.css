@@ -114,7 +114,9 @@
   display: none;
 }
 
-.pc-showcase__item img {
+.pc-showcase__item img,
+.pc-showcase__item .smart-image,
+.pc-showcase__item .smart-image__img {
   width: 100%;
   height: auto;
   display: block;

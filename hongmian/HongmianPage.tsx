@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Header } from '../src/components/Header'
 import { Footer } from '../src/components/Footer'
 import { Loading } from '../src/components/Loading'
+import { SmartImage } from '../src/components/SmartImage'
 import { criticalImages, projectMeta, showcaseImages } from './data'
 import './HongmianPage.css'
 
@@ -47,22 +48,28 @@ export function HongmianPage() {
 
             <div className="hm-hero__copy">
               <div className="hm-hero__text">
-                {projectMeta.descriptionZh.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                {projectMeta.descriptionZh.map((paragraph, index) => (
+                  <p key={`zh-${index}`}>{paragraph}</p>
                 ))}
               </div>
               <div className="hm-hero__text">
-                {projectMeta.descriptionEn.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                {projectMeta.descriptionEn.map((paragraph, index) => (
+                  <p key={`en-${index}`}>{paragraph}</p>
                 ))}
               </div>
             </div>
           </section>
 
           <section className="hm-showcase" aria-label="Project showcase">
-            {showcaseImages.map((image) => (
+            {showcaseImages.map((image, index) => (
               <figure key={image.src} className="hm-showcase__item">
-                <img src={image.src} alt={image.alt} loading="lazy" />
+                <SmartImage
+                  src={image.src}
+                  alt={image.alt}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  showPlaceholder={index > 0}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
+                />
               </figure>
             ))}
           </section>
