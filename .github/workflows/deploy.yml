@@ -32,7 +32,9 @@ jobs:
         run: npm run build
 
       - name: Prepare publish directory
-        run: cp dist/index.html dist/404.html
+        run: |
+          cp dist/index.html dist/404.html
+          printf 'fiiifi.com\n' > dist/CNAME
 
       - name: Deploy to fifi007.github.io
         uses: peaceiris/actions-gh-pages@v4
