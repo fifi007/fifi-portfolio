@@ -10,7 +10,7 @@
     "width": 259,
     "height": 182,
     "rotation": -8,
-    "listOrder": 5,
+    "listOrder": 6,
     "href": "/projects/ovf"
   },
   {
@@ -52,7 +52,7 @@
     "width": 259,
     "height": 182,
     "rotation": 8,
-    "listOrder": 3,
+    "listOrder": 5,
     "href": "/projects/payment-cloud"
   },
   {
@@ -66,14 +66,14 @@
     "width": 259,
     "height": 182,
     "rotation": -8,
-    "listOrder": 8,
+    "listOrder": 11,
     "href": "/projects/longshenmi"
   },
   {
-    "id": "fab",
-    "title": "FAB(finagent booster)",
-    "image": "/assets/gallery/FAB(finagent booster)_s.png",
-    "listImage": "/assets/list/FAB(finagent booster).jpg",
+    "id": "jxiaozhi",
+    "title": "Jxiaozhi",
+    "image": "/assets/gallery/Jxiaozhi_s.png",
+    "listImage": "/assets/list/Jxiaozhi.jpg",
     "size": "large",
     "x": 1125,
     "y": 84,
@@ -81,7 +81,7 @@
     "height": 291,
     "rotation": -5,
     "listOrder": 1,
-    "href": "/projects/fab"
+    "href": "/projects/jxiaozhi"
   },
   {
     "id": "123",
@@ -94,7 +94,7 @@
     "width": 259,
     "height": 182,
     "rotation": -8,
-    "listOrder": 6,
+    "listOrder": 7,
     "href": "/projects/123"
   },
   {
@@ -108,7 +108,7 @@
     "width": 259,
     "height": 182,
     "rotation": 8,
-    "listOrder": 11,
+    "listOrder": 12,
     "href": "/projects/cradle-baby"
   },
   {
@@ -122,7 +122,7 @@
     "width": 389,
     "height": 291,
     "rotation": 5,
-    "listOrder": 7,
+    "listOrder": 8,
     "href": "/projects/watercolor"
   },
   {
@@ -140,6 +140,20 @@
     "href": "/projects/fairy-devil"
   },
   {
+    "id": "fab",
+    "title": "FAB(finagent booster)",
+    "image": "/assets/gallery/FAB(finagent booster)_s.png",
+    "listImage": "/assets/list/FAB(finagent booster).jpg",
+    "size": "small",
+    "x": 2272,
+    "y": 242,
+    "width": 259,
+    "height": 182,
+    "rotation": -8,
+    "listOrder": 3,
+    "href": "/projects/fab"
+  },
+  {
     "id": "blue-bubble",
     "title": "Blue Bubble Demo",
     "image": "/assets/gallery/Mask group_s.png",
@@ -151,6 +165,7 @@
     "height": 182,
     "rotation": -8,
     "listOrder": 10,
-    "href": "/projects/blue-sky-bubble-demo"
+    "href": "/projects/blue-sky-bubble-demo",
+    "showInGallery": false
   }
 ]

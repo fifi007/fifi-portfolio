@@ -20,4 +20,6 @@ export interface Project {
   listOrder: number
   /** Optional dedicated project page path */
   href?: string
+  /** When false, project appears in list only (not gallery). Default true. */
+  showInGallery?: boolean
 }

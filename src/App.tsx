@@ -16,6 +16,7 @@ import {
   BLUE_SKY_BUBBLE_PATH,
   BlueSkyBubblePage,
 } from '../blue-sky-bubble-demo'
+import { JXIAOZHI_PATH, JxiaozhiPage } from '../jxiaozhi'
 import { HomePage } from './HomePage'
 
 const projectRoutes: Record<string, () => ReactElement> = {
@@ -30,6 +31,7 @@ const projectRoutes: Record<string, () => ReactElement> = {
   [LONGSHENMI_PATH]: () => <LongshenmiPage />,
   [WATERCOLOR_PATH]: () => <WatercolorPage />,
   [BLUE_SKY_BUBBLE_PATH]: () => <BlueSkyBubblePage />,
+  [JXIAOZHI_PATH]: () => <JxiaozhiPage />,
 }
 
 function App() {

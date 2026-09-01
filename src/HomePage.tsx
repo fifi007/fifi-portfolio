@@ -7,7 +7,7 @@ import { ProjectGallery } from './components/ProjectGallery'
 import { ProjectList } from './components/ProjectList'
 import { Footer } from './components/Footer'
 import { Loading } from './components/Loading'
-import { listProjects, projects } from './data/projects'
+import { listProjects, galleryProjects } from './data/projects'
 import type { ViewMode } from './data/types'
 import './App.css'
 
@@ -53,7 +53,7 @@ export function HomePage({ onLoadingComplete, isLoading }: HomePageProps) {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <ProjectGallery projects={projects} />
+                    <ProjectGallery projects={galleryProjects} />
                   </motion.div>
                 ) : (
                   <motion.div
